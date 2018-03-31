@@ -20,6 +20,7 @@
             base.Dispose(disposing);
         }
 
+
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -31,6 +32,7 @@
             this.components = new System.ComponentModel.Container();
             this.GameCanvas = new System.Windows.Forms.PictureBox();
             this.GameTimer = new System.Windows.Forms.Timer(this.components);
+      
             this.Start_Btn = new System.Windows.Forms.Button();
             this.DareBtn = new System.Windows.Forms.Button();
             this.ScoreTxtBox = new System.Windows.Forms.TextBox();
@@ -52,6 +54,7 @@
             // GameTimer
             // 
             this.GameTimer.Tick += new System.EventHandler(this.GameTimer_Tick);
+            
             // 
             // Start_Btn
             // 
@@ -72,6 +75,7 @@
             this.DareBtn.Text = "I Dare You To Press Me";
             this.DareBtn.UseVisualStyleBackColor = true;
             this.DareBtn.Click += new System.EventHandler(this.DareBtn_Click);
+			this.DareBtn.TabStop = false;
             // 
             // ScoreTxtBox
             // 
@@ -107,7 +111,10 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+
+
         }
+
 
         #endregion
 

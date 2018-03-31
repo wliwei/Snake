@@ -11,140 +11,143 @@ using System.Diagnostics;
 
 namespace Snake
 {
-    public partial class SnakeForm : Form,IMessageFilter
-    {
-        SnakePlayer Player1;
-        FoodManager FoodMngr;
-        Random r = new Random();
-        private int score = 0;
-        public SnakeForm()
-        {
-            InitializeComponent();
-            Application.AddMessageFilter(this);
-            this.FormClosed += (s, e) => Application.RemoveMessageFilter(this);
-            Player1 = new SnakePlayer(this);
-            FoodMngr = new FoodManager(GameCanvas.Width, GameCanvas.Height);
-            FoodMngr.AddRandomFood(10);
-            ScoreTxtBox.Text = score.ToString();
-        }
+	public partial class SnakeForm : Form, IMessageFilter
+	{
 
-        public void ToggleTimer()
-        {
-            GameTimer.Enabled = !GameTimer.Enabled;
-        }
 
-        public void ResetGame()
-        {
-            Player1 = new SnakePlayer(this);
-            FoodMngr = new FoodManager(GameCanvas.Width, GameCanvas.Height);
-            FoodMngr.AddRandomFood(10);
-            score = 0;
-        }
+		SnakePlayer Player1;
+		FoodManager FoodMngr;
+		Random r = new Random();
+		private int score = 0;
 
-        public bool PreFilterMessage(ref Message msg)
-        {
-            if(msg.Msg == 0x0101) //KeyUp
-                Input.SetKey((Keys)msg.WParam, false);
-            return false;
-        }
+		public SnakeForm()
+		{
+			InitializeComponent();
+			Application.AddMessageFilter(this);
+			this.FormClosed += (s, e) => Application.RemoveMessageFilter(this);
+			Player1 = new SnakePlayer(this);
+			FoodMngr = new FoodManager(GameCanvas.Width, GameCanvas.Height);
+			FoodMngr.AddRandomFood(10);
+			ScoreTxtBox.Text = score.ToString();
+			GameTimer.Interval = 120;
+		}
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if(msg.Msg == 0x100) //KeyDown
-                Input.SetKey((Keys)msg.WParam, true);
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
+		public void ToggleTimer()
+		{
+			GameTimer.Enabled = !GameTimer.Enabled;
+		}
 
-        private void GameCanvas_Paint(object sender, PaintEventArgs e)
-        {
-            Graphics canvas = e.Graphics;
-            Player1.Draw(canvas);
-            FoodMngr.Draw(canvas);
-        }
+		public void ResetGame()
+		{
+			Player1 = new SnakePlayer(this);
+			FoodMngr = new FoodManager(GameCanvas.Width, GameCanvas.Height);
+			FoodMngr.AddRandomFood(10);
+			score = 0;
+		}
 
-        private void CheckForCollisions()
-        {
-            if (Player1.IsIntersectingRect(new Rectangle(-100, 0, 100, GameCanvas.Height)))
-                Player1.OnHitWall(Direction.left);
+		public bool PreFilterMessage(ref Message msg)
+		{
+			if (msg.Msg == 0x0101) //KeyUp
+				Input.SetKey((Keys)msg.WParam, false);
+			return false;
+		}
 
-            if (Player1.IsIntersectingRect(new Rectangle(0, -100, GameCanvas.Width, 100)))
-                Player1.OnHitWall(Direction.up);
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+			if (msg.Msg == 0x100) //KeyDown
+				Input.SetKey((Keys)msg.WParam, true);
+			
+			return base.ProcessCmdKey(ref msg, keyData);
+		}
 
-            if (Player1.IsIntersectingRect(new Rectangle(GameCanvas.Width, 0, 100, GameCanvas.Height)))
-                Player1.OnHitWall(Direction.right);
+		private void GameCanvas_Paint(object sender, PaintEventArgs e)
+		{
+			Graphics canvas = e.Graphics;
+			Player1.Draw(canvas);
+			FoodMngr.Draw(canvas);
+			FoodMngr.DrawRed(canvas); 
+		}
 
-            if (Player1.IsIntersectingRect(new Rectangle(0, GameCanvas.Height, GameCanvas.Width, 100)))
-                Player1.OnHitWall(Direction.down);
+		private void CheckForCollisions()
+		{
+			if (Player1.IsIntersectingRect(new Rectangle(-100, 0, 100, GameCanvas.Height)))
+				Player1.OnHitWall(Direction.left);
 
-            //Is hitting food
-            List<Rectangle> SnakeRects = Player1.GetRects();
-            foreach(Rectangle rect in SnakeRects)
-            {
-                if(FoodMngr.IsIntersectingRect(rect,true))
-                {
-                    FoodMngr.AddRandomFood();
-                    Player1.AddBodySegments(1);
-                    score++;
-                    ScoreTxtBox.Text = score.ToString();
-                }
-            }
-        }
+			if (Player1.IsIntersectingRect(new Rectangle(0, -100, GameCanvas.Width, 100)))
+				Player1.OnHitWall(Direction.up);
 
-        private void SetPlayerMovement()
-        {
-            if (Input.IsKeyDown(Keys.Left))
-            {
-                Player1.SetDirection(Direction.left);
-            }
-            else if (Input.IsKeyDown(Keys.Right))
-            {
-                Player1.SetDirection(Direction.right);
-            }
-            else if (Input.IsKeyDown(Keys.Up))
-            {
-                Player1.SetDirection(Direction.up);
-            }
-            else if (Input.IsKeyDown(Keys.Down))
-            {
-                Player1.SetDirection(Direction.down);
-            }
-            Player1.MovePlayer();
-        }
+			if (Player1.IsIntersectingRect(new Rectangle(GameCanvas.Width, 0, 100, GameCanvas.Height)))
+				Player1.OnHitWall(Direction.right);
 
-        private void GameTimer_Tick(object sender, EventArgs e)
-        {
-            SetPlayerMovement();
-            CheckForCollisions();
-            GameCanvas.Invalidate();
-        }
+			if (Player1.IsIntersectingRect(new Rectangle(0, GameCanvas.Height, GameCanvas.Width, 100)))
+				Player1.OnHitWall(Direction.down);
 
-        private void Start_Btn_Click(object sender, EventArgs e)
-        {
-            ToggleTimer();
-        }
+			//Is hitting food
+			List<Rectangle> SnakeRects = Player1.GetRects();
+			foreach (Rectangle rect in SnakeRects)
+			{
+				if (FoodMngr.IsIntersectingRect(rect, true))
+				{
+					FoodMngr.AddRandomFood();
+					Player1.AddBodySegments(1);
+					score++;
+					ScoreTxtBox.Text = score.ToString();
+				}
 
-        private void DareBtn_Click(object sender, EventArgs e)
-        {
-            int index = r.Next(4);
-            switch(index)
-            {
-              case 0:
-                    MessageBox.Show("How dare you listen");
-                    break;
-              case 1:
-                    MessageBox.Show("This is a dark path you are on");
-                    break;
-              case 2:
-                    MessageBox.Show("I knew you wouldn't listen");
-                    break;
-              case 3:
-                    MessageBox.Show("Have some food :)");
-                    FoodMngr.AddRandomFood(20);
-                    GameCanvas.Invalidate();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+				if (FoodMngr.IsIntersectingRectWithRed(rect, true))
+				{
+					
+					FoodMngr.AddRandomFoodRed();
+					Player1.AddBodySegments(1);
+					score+=2;
+					ScoreTxtBox.Text = score.ToString();
+				}
+			}
+		}
+
+		private void SetPlayerMovement()
+		{
+			if (Input.IsKeyDown(Keys.A))
+			{
+				Player1.SetDirection(Direction.left);
+			}
+			else if (Input.IsKeyDown(Keys.D))
+			{
+				Player1.SetDirection(Direction.right);
+			}
+			else if (Input.IsKeyDown(Keys.W))
+			{
+				Player1.SetDirection(Direction.up);
+			}
+			else if (Input.IsKeyDown(Keys.S))
+			{
+				Player1.SetDirection(Direction.down);
+			}
+			Player1.MovePlayer();
+		}
+
+		private void GameTimer_Tick(object sender, EventArgs e)
+		{
+			SetPlayerMovement();
+			CheckForCollisions();
+			GameCanvas.Invalidate();
+		}
+
+
+
+		private void Start_Btn_Click(object sender, EventArgs e)
+		{
+			
+			ToggleTimer();
+		}
+
+		private void DareBtn_Click(object sender, EventArgs e)
+		{
+			GameTimer.Enabled = false;
+			MessageBox.Show("Have some food :)");
+			FoodMngr.AddRandomFood(20);
+			GameCanvas.Invalidate();
+
+		}
+	}
 }
