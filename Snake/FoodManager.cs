@@ -91,12 +91,14 @@ namespace Snake
             {	
                 AddRandomFood();
             }
+        }
 
-			for (int i = 0; i < 5; i++)
+		public void AddRandomFoodRed(int Amount) { 
+		for (int i = 0; i< Amount; i++)
 			{
 				AddRandomFoodRed();
 			}
-        }
+		}
 
         /// <summary>
         /// Determines whether the given rectangle intersects with any existing food pellets

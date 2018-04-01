@@ -149,5 +149,25 @@ namespace Snake
 			GameCanvas.Invalidate();
 
 		}
+
+		private void EasyBtn_Click(object sender, EventArgs e)
+		{
+			GameTimer.Enabled = false;
+			MessageBox.Show("Poor Baby");
+			FoodMngr.AddRandomFoodRed(5);
+			GameTimer.Interval = 200;
+			GameCanvas.Invalidate();		}
+
+		private void HardBtn_Click(object sender, EventArgs e)
+		{
+			GameTimer.Enabled = false;
+			MessageBox.Show("YOU CRAZY BRUH?");
+			FoodMngr.AddRandomFood(-10);
+			FoodMngr.AddRandomFoodRed(2);
+			GameTimer.Interval = 20;
+			GameCanvas.Invalidate();
+		}
+
+
 	}
 }
