@@ -29,7 +29,7 @@ namespace Snake
 			FoodMngr = new FoodManager(GameCanvas.Width, GameCanvas.Height);
 			FoodMngr.AddRandomFood(10);
 			ScoreTxtBox.Text = score.ToString();
-			GameTimer.Interval = 120;
+			GameTimer.Interval = 80;
 		}
 
 		public void ToggleTimer()
