@@ -152,6 +152,7 @@ namespace Snake
 
 		private void EasyBtn_Click(object sender, EventArgs e)
 		{
+			ResetGame();
 			GameTimer.Enabled = false;
 			MessageBox.Show("Poor Baby");
 			FoodMngr.AddRandomFoodRed(5);
@@ -160,6 +161,7 @@ namespace Snake
 
 		private void HardBtn_Click(object sender, EventArgs e)
 		{
+			ResetGame();
 			GameTimer.Enabled = false;
 			MessageBox.Show("YOU CRAZY BRUH?");
 			FoodMngr.AddRandomFood(-10);
