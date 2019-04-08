@@ -9,7 +9,7 @@ namespace Snake
 {
     /// <summary>
     /// Represents a snake body part, Derived from GamePart
-    
+    /// <summary>
 	/// Testing
     class BodyPart : GamePart
     {
